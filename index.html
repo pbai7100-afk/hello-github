@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>代码雨</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#030807}
+canvas{display:block;width:100vw;height:100vh}
+.hint{position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);
+color:#39ff88;font:700 clamp(1rem,3vw,2rem) monospace;letter-spacing:.18em;
+text-shadow:0 0 12px #39ff88;opacity:.8;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas>
+<div class="hint">CODE RAIN</div>
+<script>
+const canvas=document.querySelector('#rain');
+const ctx=canvas.getContext('2d');
+const chars='01アイウエオ{}[]<>/\\+=*&%$#@';
+let drops=[],font=16,width,height;
+function resize(){
+const ratio=devicePixelRatio||1;
+width=innerWidth;height=innerHeight;
+canvas.width=width*ratio;canvas.height=height*ratio;ctx.scale(ratio,ratio);
+font=Math.max(14,Math.min(22,width/80));
+drops=Array(Math.ceil(width/font)).fill(0).map(()=>Math.random()*-height/font);
+}
+function draw(){
+ctx.fillStyle='rgba(3,8,7,.09)';ctx.fillRect(0,0,width,height);ctx.font=`${font}px monospace`;
+drops.forEach((y,x)=>{const ch=chars[Math.floor(Math.random()*chars.length)];
+ctx.fillStyle=Math.random()>.96?'#d8ffe8':'#20e878';ctx.shadowBlur=10;ctx.shadowColor='#20e878';
+ctx.fillText(ch,x*font,y*font);ctx.shadowBlur=0;
+if(y*font>height&&Math.random()>.975)drops[x]=0;else drops[x]=y+1});
+}
+addEventListener('resize',resize);resize();setInterval(draw,42);
+</script>
+</body>
+</html>
